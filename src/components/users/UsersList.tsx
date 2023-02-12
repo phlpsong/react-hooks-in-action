@@ -1,21 +1,22 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import getData from '../../utils/api';
 import Spinner from '../ui/Spinner';
 import User from './User';
 
-export default function UsersList() {
+export default function UsersList({user, setUser}) {
   
   // include state for an error object and an isLoading flag
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
-  const [userIndex, setUserIndex] = useState(0);
+  // const [userIndex, setUserIndex] = useState(0);
 
-  const user = users?.[userIndex];
+  // const user = users?.[userIndex];
 
   useEffect(() => {
     getData('http://localhost:3001/users')
       .then(users => {
+        setUser(users[0]);
         setUsers(users);
         setIsLoading(false);
       })
@@ -23,7 +24,7 @@ export default function UsersList() {
         setError(error); // set the error object
         setIsLoading(false); // we're no longer loading
       });
-  }, []);
+  }, [setUser]);
 
   if (error) {
     return <p>{error.message}</p>;
@@ -34,36 +35,22 @@ export default function UsersList() {
   }
 
   return (
-    <Fragment>
-      <div>
-        <ul className="users items-list-nav">
-          {users.map((u, i) => (
-            <li
-              key={u.id}
-              className={i === userIndex ? 'selected' : undefined}
+    <div>
+      <ul className="users items-list-nav">
+        {users.map((u, i) => (
+          <li
+            key={u.id}
+            className={u.id === user?.id ? 'selected' : undefined}
+          >
+            <button
+              className="btn"
+              onClick={() => setUser(u)}
             >
-              <button
-                className="btn"
-                onClick={() => setUserIndex(i)}
-              >
-                {u.name}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {user && (
-        <div className="bookable-details">
-          <div className="item">
-            <div className="item-header">
-              <h2>
-                {user.title}
-              </h2>
-            </div>
-            <p>{user.notes}</p>
-          </div>
-        </div>
-      )}
-    </Fragment>
+              {u.name}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

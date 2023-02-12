@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from 'react-icons/fa';
 import BookablesPage from './components/BookablesPage';
-import BookingsPage from './components/BookingsPage';
+import BookingsPage from './components/bookings/BookingsPage';
 import UsersPage from './components/UsersPage';
 import UserPicker from './components/UserPicker';
 

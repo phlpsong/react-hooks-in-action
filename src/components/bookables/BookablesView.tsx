@@ -1,30 +1,20 @@
-import { Fragment, useReducer } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import BookableDetails from './BookableDetails';
 import BookablesList from './BookablesList';
-import reducer from './reducer';
-
-const initialState = {
-  group: 'Rooms',
-  bookableIndex: 0, 
-  hasDetails: true,
-  bookables: [],
-  isLoading: true,
-  error: false,
-};
 
 export default function BookablesView() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [bookable, setBookable] = useState();
 
-  const { 
-    group, bookableIndex, bookables,
-  } = state;
-
-  const bookablesInGroup = bookables.filter(b => b.group === group);
-  const bookable = bookablesInGroup[bookableIndex];
+  const updateBookable = useCallback(selected => {
+    if (selected) {
+      selected.lastShown = Date.now();
+      setBookable(selected);
+    }
+  }, []);
 
   return (
     <Fragment>
-      <BookablesList state={state} dispatch={dispatch} />
+      <BookablesList bookable={bookable} setBookable={updateBookable} />
       <BookableDetails bookable={bookable} />
     </Fragment>
   );

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useReducer } from 'react';
+import { Fragment, MutableRefObject, useEffect, useReducer, useRef } from 'react';
 import { days, sessions } from '../../static.json';
 import { FaArrowRight } from 'react-icons/fa';
 import reducer from './reducer';
@@ -27,7 +27,7 @@ export default function BookablesList() {
   } = state;
   const bookablesInGroup = bookables.filter(b => b.group === group);
   const bookable = bookablesInGroup[bookableIndex];
-  const groups = [...new Set(bookables.map(b => b.group))];
+  const groups: string[] = [...new Set(bookables.map(b => b.group))];
 
   useEffect(() => {
     dispatch({ type: 'FETCH_BOOKABLES_REQUEST' });
@@ -41,13 +41,27 @@ export default function BookablesList() {
         payload: error,
       }));
   }, []);
+
+  const nextButtonRef = useRef() as MutableRefObject<HTMLButtonElement>;
   
+  // const timerRef = useRef(null);
+
+  // function stopPresentation() {
+  //   clearInterval(timerRef.current);
+  // }
+
+  // useEffect(() => {
+  //   timerRef.current = setInterval(() => {
+  //     dispatch({ type: 'NEXT_BOOKABLE' });
+  //   }, 3000);
+  // }, []);
 
   function changeBookable (selectedIndex: number) {
     dispatch({
       type: 'SET_BOOKABLE',
       payload: selectedIndex,
     });
+    nextButtonRef.current.focus();
   }
 
   function nextBookable () {
@@ -99,6 +113,7 @@ export default function BookablesList() {
           <button
             className="btn"
             onClick={nextBookable}
+            ref={nextButtonRef}
             autoFocus
           >
             <FaArrowRight/>
@@ -123,6 +138,9 @@ export default function BookablesList() {
                   />
                   Show Details
                 </label>
+                {/* <button className='btn' onClick={stopPresentation}>
+                  Stop
+                </button> */}
               </span>
             </div>
 

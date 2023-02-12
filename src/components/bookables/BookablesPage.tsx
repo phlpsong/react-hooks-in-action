@@ -1,4 +1,4 @@
-import BookablesList from './bookables/BookablesList';
+import BookablesList from './BookablesList';
 
 export default function BookablesPage () {
   return (

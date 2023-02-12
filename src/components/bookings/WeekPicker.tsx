@@ -4,6 +4,10 @@ import { getWeek } from '../../utils/date-wrangler';
 import reducer from './weekReducer';
 
 export default function WeekPicker (props: { date: Date }) {
+
+  // reducer: create new state by action and old state
+  // initArg: the args that init func needed
+  // initFn: generate init state
   const [week, dispatch] = useReducer(reducer, props.date, getWeek);
 
   return (

@@ -7,10 +7,10 @@ import {
 } from 'react-router-dom';
 import React from 'react';
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from 'react-icons/fa';
-import BookablesPage from './components/BookablesPage';
+import BookablesPage from './components/bookables/BookablesPage';
 import BookingsPage from './components/bookings/BookingsPage';
-import UsersPage from './components/UsersPage';
-import UserPicker from './components/UserPicker';
+import UsersPage from './components/users/UsersPage';
+import UserPicker from './components/users/UserPicker';
 
 function App() {
   return (

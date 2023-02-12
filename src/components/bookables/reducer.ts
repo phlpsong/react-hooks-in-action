@@ -1,4 +1,7 @@
-export default function reducer(state: { group: string; bookableIndex: number; hasDetails: boolean; bookables: any[]}, action: { type: string; payload?: any;}) {
+export default function reducer(
+  state: { group: string; bookableIndex: number; hasDetails: boolean; bookables: any[], isLoading: boolean; error: Error},
+  action: { type: string; payload?: any;}
+) {
   switch (action.type) {
   case 'SET_GROUP':
     return {
@@ -24,6 +27,25 @@ export default function reducer(state: { group: string; bookableIndex: number; h
       bookableIndex: (state.bookableIndex + 1) % count,
     };
   }
+  case 'FETCH_BOOKABLES_REQUEST':
+    return {
+      ...state,
+      isLoading: true,
+      error: false,
+      bookables: []
+    };
+  case 'FETCH_BOOKABLES_SUCCESS':
+    return {
+      ...state,
+      isLoading: false,
+      bookables: action.payload,
+    };
+  case 'FETCH_BOOKABLES_ERROR':
+    return {
+      ...state,
+      isLoading: false,
+      error: action.payload
+    };
   default:
     return state;
   }

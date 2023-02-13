@@ -1,21 +1,13 @@
-import { MutableRefObject, useReducer, useRef, useState } from 'react';
+import {useRef} from 'react';
 import {FaChevronLeft, FaCalendarDay, FaChevronRight, FaCalendarCheck} from 'react-icons/fa';
-import { getWeek } from '../../utils/date-wrangler';
-import reducer from './weekReducer';
 
-export default function WeekPicker (props: { date: Date }) {
+export default function WeekPicker ({dispatch}) {
+  const textboxRef = useRef();
 
-  // reducer: create new state by action and old state
-  // initArg: the args that init func needed
-  // initFn: generate init state
-  const [week, dispatch] = useReducer(reducer, props.date, getWeek);
-  const [dateText, setDateText] = useState('2020-06-24');
-  //   const textboxRef = useRef() as MutableRefObject<HTMLInputElement>;
-
-  function goToDate() {
-    dispatch({ 
+  function goToDate () {
+    dispatch({
       type: 'SET_DATE',
-      payload: dateText
+      payload: textboxRef.current.value
     });
   }
 
@@ -41,9 +33,9 @@ export default function WeekPicker (props: { date: Date }) {
         <span>
           <input
             type="text"
+            ref={textboxRef}
             placeholder="e.g. 2020-09-02"
-            value={dateText}
-            onChange={(e) => setDateText(e.target.value)}
+            defaultValue="2020-06-24"
           />
 
           <button
@@ -62,9 +54,6 @@ export default function WeekPicker (props: { date: Date }) {
           <span>Next</span>
           <FaChevronRight/>
         </button>
-      </p>
-      <p>
-        {week.start.toDateString()} - {week.end.toDateString()}
       </p>
     </div>
   );

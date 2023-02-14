@@ -16,7 +16,7 @@ export default function UsersList({user, setUser}) {
   useEffect(() => {
     getData('http://localhost:3001/users')
       .then(users => {
-        setUser(users[0]);
+        // setUser(users[0]);
         setUsers(users);
         setIsLoading(false);
       })
@@ -44,7 +44,10 @@ export default function UsersList({user, setUser}) {
           >
             <button
               className="btn"
-              onClick={() => setUser(u)}
+              onClick={() => {
+                console.log(`user: ${JSON.stringify(u)}`);
+                setUser(u);
+              }}
             >
               {u.name}
             </button>

@@ -1,33 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, } from 'react';
+import useFetch from '../../utils/useFetch';
 import Spinner from '../ui/Spinner';
-import User from './User';
 import { useUser } from './UserProvider';
 
 export default function UserPicker () {
 
-  const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useUser();
 
+  const {data: users = [], status} = useFetch('http://localhost:3001/users');
+
   useEffect(() => {
-    fetch('http://localhost:3001/users')
-      .then(resp => resp.json())
-      .then(data => {
-        setUsers(data);
-        setUser(data[0]);
-      });
-  }, [setUser]);
+    setUser(users[0]);
+  }, [users, setUser]);
 
   function handleSelect (e) {
     const selectedID = parseInt(e.target.value, 10);
     const selectedUser = users.find(u => u.id === selectedID);
-
     setUser(selectedUser);
   }
 
-  if (users.length === 0) {
-    return <Spinner />;
+  if (status === 'loading') {
+    return <Spinner/>;
   }
 
+  if (status === 'error') {
+    return <span>Error!</span>;
+  }
+  
   return (
     <select
       onChange={handleSelect}

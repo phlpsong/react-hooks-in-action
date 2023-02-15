@@ -5,19 +5,16 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import React, { useState } from 'react';
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from 'react-icons/fa';
 import BookablesPage from './components/bookables/BookablesPage';
 import BookingsPage from './components/bookings/BookingsPage';
 import UsersPage from './components/users/UsersPage';
 import UserPicker from './components/users/UserPicker';
-import UserContext from './components/users/UserContext';
+import { UserProvider } from './components/users/UserProvider';
 
 function App() {
-  const [user, setUser] = useState();
-
   return (
-    <UserContext.Provider value={{user, setUser}}>
+    <UserProvider>
       <Router>
         <div className="App">
           <header>
@@ -54,7 +51,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </UserContext.Provider>
+    </UserProvider>
   );
 }
 

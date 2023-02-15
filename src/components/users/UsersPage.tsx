@@ -1,11 +1,13 @@
-import { Fragment, useContext, useState } from 'react';
-import UserContext from './UserContext';
+import { Fragment, useState } from 'react';
 import UserDetail from './UserDetail';
+import { useUser } from './UserProvider';
 import UsersList from './UsersList';
 
 export default function UsersPage () {
   const [user, setUser] = useState(null);
-  const {user: loggedInUser} = useContext(UserContext);
+  // const {user: loggedInUser} = useContext(UserContext);
+
+  const [loggedInUser] = useUser();
 
   // if no user has been selected in the users list,
   // select the logged in user

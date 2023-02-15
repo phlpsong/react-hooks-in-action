@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import UserContext from '../users/UserContext';
+import { useUser } from '../users/UserProvider';
 import Booking from './Booking';
 
 export default function BookingDetails ({booking, bookable}) {
 
-  const { user } = useContext(UserContext);
+  const [user] = useUser();
   const isBooker = booking && user && (booking.bookerId === user.id);
 
   return (

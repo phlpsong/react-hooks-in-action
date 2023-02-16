@@ -1,22 +1,25 @@
 import {useRef} from 'react';
 import {FaChevronLeft, FaCalendarDay, FaChevronRight, FaCalendarCheck} from 'react-icons/fa';
+import { shortISO, addDays } from '../../utils/date-wrangler';
+import { useBookingsParams } from './bookingsHook';
 
 export default function WeekPicker ({dispatch}) {
   const textboxRef = useRef();
 
-  function goToDate () {
-    dispatch({
-      type: 'SET_DATE',
-      payload: textboxRef.current.value
-    });
-  }
+  const {date, setBookingsDate : goToDate} = useBookingsParams();
+
+  const dates = {
+    prev: shortISO(addDays(date, -7)),
+    next: shortISO(addDays(date, 7)),
+    today: shortISO(new Date())
+  };
 
   return (
     <div>
       <p className="date-picker">
         <button
           className="btn"
-          onClick={() => dispatch({type: 'PREV_WEEK'})}
+          onClick={() => goToDate(dates.prev)}
         >
           <FaChevronLeft/>
           <span>Prev</span>
@@ -24,7 +27,7 @@ export default function WeekPicker ({dispatch}) {
 
         <button
           className="btn"
-          onClick={() => dispatch({type: 'TODAY'})}
+          onClick={() => goToDate(dates.today)}
         >
           <FaCalendarDay/>
           <span>Today</span>
@@ -40,7 +43,7 @@ export default function WeekPicker ({dispatch}) {
 
           <button
             className="go btn"
-            onClick={goToDate}
+            onClick={() => goToDate(textboxRef.current.value)}
           >
             <FaCalendarCheck/>
             <span>Go</span>
@@ -49,7 +52,7 @@ export default function WeekPicker ({dispatch}) {
 
         <button
           className="btn"
-          onClick={() => dispatch({type: 'NEXT_WEEK'})}
+          onClick={() => goToDate(dates.next)}
         >
           <span>Next</span>
           <FaChevronRight/>

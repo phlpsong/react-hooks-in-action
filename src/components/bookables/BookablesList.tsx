@@ -1,72 +1,46 @@
-import { MutableRefObject, useEffect, useRef, } from 'react';
-import { FaArrowRight } from 'react-icons/fa';
-import useFetch from '../../utils/useFetch';
-import Spinner from '../ui/Spinner';
+import {Link, useNavigate} from 'react-router-dom';
+import {FaArrowRight} from 'react-icons/fa';
 
-export default function BookablesList({ bookable, setBookable }) {
-
-  const {data: bookables = [], status, error} = useFetch(
-    'http://localhost:3001/bookables'
-  );
-
+export default function BookablesList ({bookable, bookables, getUrl}) {
   const group = bookable?.group;
   const bookablesInGroup = bookables.filter(b => b.group === group);
-  const groups: string[] = [...new Set(bookables.map(b => b.group))];
+  const groups = [...new Set(bookables.map(b => b.group))];
 
-  useEffect(() => {
-    setBookable(bookables[0]);
-  }, [bookables, setBookable]);
+  const navigate = useNavigate();
 
-  const nextButtonRef = useRef() as MutableRefObject<HTMLButtonElement>;
-
-  function changeBookable (selectedBookable: any) {
-    setBookable(selectedBookable);
-    nextButtonRef.current.focus();
+  function changeGroup (event) {
+    const bookablesInSelectedGroup = bookables.filter(
+      b => b.group === event.target.value
+    );
+    navigate(getUrl(bookablesInSelectedGroup[0].id));
   }
 
   function nextBookable () {
     const i = bookablesInGroup.indexOf(bookable);
     const nextIndex = (i + 1) % bookablesInGroup.length;
     const nextBookable = bookablesInGroup[nextIndex];
-    setBookable(nextBookable);
-  }
-
-  function changeGroup (group: string) {
-    const bookablesInSelectedGroup = bookables.filter(
-      b => b.group === group
-    );
-    setBookable(bookablesInSelectedGroup[0]);
-  }
-
-  if (status === 'error') {
-    return <p>{error.message}</p>;
-  }
-
-  if (status === 'loading') {
-    return <p><Spinner /> Loading bookables... </p>;
+    navigate(getUrl(nextBookable.id));
   }
 
   return (
     <div>
-      <select
-        value={group}
-        onChange={(e) => changeGroup(e.target.value)}
-      >
+      <select value={group} onChange={changeGroup}>
         {groups.map(g => <option value={g} key={g}>{g}</option>)}
       </select>
 
       <ul className="bookables items-list-nav">
-        {bookablesInGroup.map((b, i) => (
+        {bookablesInGroup.map(b => (
           <li
             key={b.id}
-            className={b.id === bookable.id ? 'selected' : undefined}
+            className={b.id === bookable.id ? 'selected' : null}
           >
-            <button
+            <Link
+              to={getUrl(b.id)}
               className="btn"
-              onClick={() => changeBookable(b)}
+              replace={true}
             >
               {b.title}
-            </button>
+            </Link>
           </li>
         ))}
       </ul>
@@ -74,7 +48,6 @@ export default function BookablesList({ bookable, setBookable }) {
         <button
           className="btn"
           onClick={nextBookable}
-          ref={nextButtonRef}
           autoFocus
         >
           <FaArrowRight/>

@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
+import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
+import getData from '../../utils/api';
 import { isDate, shortISO } from '../../utils/date-wrangler';
-import useFetch from '../../utils/useFetch';
 import { getGrid, transformBookings } from './grid-builder';
 
 export function useBookings(bookableId, startDate, endDate) {
@@ -10,7 +11,10 @@ export function useBookings(bookableId, startDate, endDate) {
   const urlRoot = 'http://localhost:3001/bookings';
   const queryString = `bookableId=${bookableId}` +
       `&date_gte=${start}&date_lte=${end}`;
-  const query = useFetch(`${urlRoot}?${queryString}`);
+  const query = useQuery(
+    ['bookings', bookableId, start, end],
+    () => getData(`${urlRoot}?${queryString}`)
+  );
   
   return {
     bookings: query.data ? transformBookings(query.data) : {},

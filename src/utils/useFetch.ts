@@ -26,7 +26,9 @@ export default function useFetch(url: string) {
           setStatus('error');
         }
       });
-    return () => doUpdate = false;
+    return () => {
+      doUpdate = false;
+    };
   }, [url]);
 
   return {data, status, error};

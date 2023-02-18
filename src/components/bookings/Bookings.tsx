@@ -1,9 +1,9 @@
 import { useEffect, useState} from 'react';
 import {getWeek, shortISO} from '../../utils/date-wrangler';
 import WeekPicker from './WeekPicker';
-import BookingsGrid from './BookingsGrid';
 import BookingDetails from './BookingDetails';
 import { useBookings, useBookingsParams } from './bookingsHook';
+import BookingsGridSlide from './BookingsGridSlide';
 
 export default function Bookings ({bookable}) {
 
@@ -33,7 +33,7 @@ export default function Bookings ({bookable}) {
       <div>
         <WeekPicker />
 
-        <BookingsGrid
+        <BookingsGridSlide
           week={week}
           bookable={bookable}
           booking={booking}

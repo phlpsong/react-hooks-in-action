@@ -1,19 +1,15 @@
-import {useEffect, useMemo, useState, Fragment} from 'react';
-import {getGrid, transformBookings} from './grid-builder';
-import {getBookings} from '../../utils/api';
+import { Fragment } from 'react';
 import Spinner from '../ui/Spinner';
 import { useBookings, useGrid } from './bookingsHook';
 
 export default function BookingsGrid (
   {week, bookable, booking, setBooking}
 ) {
-  const {bookings, status, error} = useBookings(bookable?.id, week.start, week.end);
+  const {bookings, status, error} = useBookings(
+    bookable?.id, week.start, week.end
+  );
 
   const {grid, sessions, dates} = useGrid(bookable, week.start);
-
-  useEffect(() => {
-    setBooking(null);
-  }, [bookable, week.start, setBooking]);
 
   function cell (session, date) {
     const cellData = bookings?.[session]?.[date]
@@ -26,7 +22,11 @@ export default function BookingsGrid (
       <td
         key={date}
         className={isSelected ? 'selected' : undefined}
-        onClick={status === 'success' ? () => setBooking(cellData) : undefined}
+        onClick={
+          status === 'success'
+            ? () => setBooking(cellData)
+            : undefined
+        }
       >
         {cellData.title}
       </td>
@@ -34,18 +34,22 @@ export default function BookingsGrid (
   }
 
   if (!grid) {
-    return <p>Loading...</p>;
+    return <p>Waiting for bookable and week details...</p>;
   }
 
   return (
     <Fragment>
-      {error && (
+      {status === 'error' && (
         <p className="bookingsError">
           {`There was a problem loading the bookings data (${error})`}
         </p>
       )}
       <table
-        className={status === 'success'  ? 'bookingsGrid active' : 'bookingsGrid'}
+        className={
+          status === 'success'
+            ? 'bookingsGrid active'
+            : 'bookingsGrid'
+        }
       >
         <thead>
           <tr>

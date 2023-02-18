@@ -1,7 +1,40 @@
+import { useMutation, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router';
+import { createItem } from '../../utils/api';
+import PageSpinner from '../ui/PageSpinner';
+import BookableForm from './BookableForm';
+import useFormState from './useFormState';
+
 export default function BookableNew() {
+  const navigate = useNavigate();
+  const formState = useFormState();
+  const queryClient = useQueryClient();
+
+  const {mutate: createBookable, status, error} = useMutation(
+    item => createItem('http://localhost:3001/bookables', item), {
+      onSuccess: bookable => {
+        queryClient.setQueryData('bookables', old => [...(old || []), bookable]
+        );
+        navigate(`bookables/${bookable.id}`);
+      }
+    }
+  );
+
+  function handleSubmit () {
+    createBookable(formState.state);
+  }
+
+  if (status === 'error') {
+    return <p>{error.message}</p>;
+  }
+  if (status === 'loading') {
+    return <PageSpinner />;
+  }
+
   return (
-    <div>
-        BookableNew
-    </div>
+    <BookableForm
+      formState={formState}
+      handleSubmit={handleSubmit}
+    />
   );
 }

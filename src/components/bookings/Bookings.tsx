@@ -12,13 +12,21 @@ export default function Bookings ({bookable}) {
   const {date} = useBookingsParams();
   const week = getWeek(date);
   const weekStart = shortISO(week.start);
-  
+
   const {bookings} = useBookings(bookable?.id, week.start, week.end);
   const selectedBooking = bookings?.[booking?.session]?.[booking.date];
 
   useEffect(() => {
     setBooking(null);
   }, [bookable, weekStart]);
+
+  // deselect the booking if it no longer exists
+  // i.e. it has been deleted
+  useEffect(() => {
+    if (booking?.id !== undefined && !selectedBooking) {
+      setBooking(null);
+    }
+  }, [booking, selectedBooking]);
 
   return (
     <div className="bookings">

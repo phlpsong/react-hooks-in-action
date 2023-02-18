@@ -1,5 +1,5 @@
-import {sessions as sessionNames} from "../../static.json";
-import {addDays, shortISO} from "../../utils/date-wrangler";
+import {sessions as sessionNames} from '../../static.json';
+import {addDays, shortISO} from '../../utils/date-wrangler';
 
 export function getGrid (bookable, startDate) {
   const dates = bookable.days.sort().map(
@@ -16,7 +16,7 @@ export function getGrid (bookable, startDate) {
       session,
       date,
       bookableId: bookable.id,
-      title: ""
+      title: ''
     });
   });
 

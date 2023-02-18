@@ -3,7 +3,7 @@ import {FaChevronLeft, FaCalendarDay, FaChevronRight, FaCalendarCheck} from 'rea
 import { shortISO, addDays } from '../../utils/date-wrangler';
 import { useBookingsParams } from './bookingsHook';
 
-export default function WeekPicker ({dispatch}) {
+export default function WeekPicker () {
   const textboxRef = useRef();
 
   const {date, setBookingsDate : goToDate} = useBookingsParams();

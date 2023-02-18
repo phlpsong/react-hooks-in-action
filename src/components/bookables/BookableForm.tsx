@@ -37,7 +37,7 @@ export default function BookableForm ({formState = {}, handleSubmit, handleDelet
           name="notes"
           value={notes}
           onChange={handleChange}
-          rows={4}
+          rows="4"
         />
 
         <div className="bookable-availability">

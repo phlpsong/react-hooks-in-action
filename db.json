@@ -114,6 +114,9 @@
         5,
         6
       ]
+    },
+    {
+      "id": 7
     }
   ],
   "users": [
@@ -202,6 +205,14 @@
       "title": "Project Update",
       "bookerId": 1,
       "id": 8
+    },
+    {
+      "session": "Morning",
+      "date": "2020-07-28",
+      "bookableId": 1,
+      "title": "",
+      "bookerId": 1,
+      "id": 9
     }
   ]
 }

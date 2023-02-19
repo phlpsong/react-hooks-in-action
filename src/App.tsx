@@ -6,12 +6,16 @@ import {
   Link
 } from 'react-router-dom';
 import { FaCalendarAlt, FaDoorOpen, FaUsers } from 'react-icons/fa';
-import BookablesPage from './components/bookables/BookablesPage';
-import BookingsPage from './components/bookings/BookingsPage';
-import UsersPage from './components/users/UsersPage';
 import UserPicker from './components/users/UserPicker';
 import { UserProvider } from './components/users/UserProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Fragment, lazy, Suspense } from 'react';
+import PageSpinner from './components/ui/PageSpinner';
+import ErrorBoundary from './components/ui/ErrorBoundary';
+
+const BookablesPage = lazy(() => import('./components/bookables/BookablesPage'));
+const BookingsPage = lazy(() => import('./components/bookings/BookingsPage'));
+const UsersPage = lazy(() => import('./components/users/UsersPage'));
 
 const queryClient = new QueryClient();
 
@@ -46,11 +50,20 @@ function App() {
               </nav>
               <UserPicker/>
             </header>
-            <Routes>
-              <Route path="/bookings" element={<BookingsPage/>}/>
-              <Route path="/bookables/*" element={<BookablesPage/>}/>
-              <Route path="/users" element={<UsersPage/>}/>
-            </Routes>
+            <ErrorBoundary fallback={<Fragment>
+              <h1>Something went wrong!</h1>
+              <p>Try reloading the page</p>
+            </Fragment>}>
+
+              <Suspense fallback={<PageSpinner />}>
+                <Routes>
+                  <Route path="/bookings" element={<BookingsPage/>}/>
+                  <Route path="/bookables/*" element={<BookablesPage/>}/>
+                  <Route path="/users" element={<UsersPage/>}/>
+                </Routes>
+              </Suspense>
+
+            </ErrorBoundary>
           </div>
         </Router>
       </UserProvider>

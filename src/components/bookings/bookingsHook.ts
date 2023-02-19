@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, } from 'react';
+import { useTransition } from 'react-spring';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import getData, { createItem, deleteItem, editItem } from '../../utils/api';
@@ -58,7 +59,7 @@ export function useBookingsParams() {
 export function useCreateBooking (key) {
   const queryClient = useQueryClient();
   const mutation = useMutation(
-    item => createItem("http://localhost:3001/bookings", item),
+    item => createItem('http://localhost:3001/bookings', item),
     {
       onSuccess: (booking) => {
         queryClient.invalidateQueries(key);
@@ -103,7 +104,7 @@ export function useDeleteBooking (key) {
       onSuccess: (resp, id) => {
         queryClient.invalidateQueries(key);
         const bookings = queryClient.getQueryData(key) || [];
-        queryClient.setQueryData(key, bookings.filter(b => b.id !== id))
+        queryClient.setQueryData(key, bookings.filter(b => b.id !== id));
       }
     }
   );
@@ -112,4 +113,38 @@ export function useDeleteBooking (key) {
     deleteBooking: mutation.mutate,
     isDeleting: mutation.isLoading
   };
+}
+
+function getSlideStyles (date1, date2) {
+  // vertical transition
+  if (date1 === date2) {
+    return {
+      from: {opacity: 1, transform: 'translate3d(0, -100%, 0)'},
+      enter: {opacity: 1, transform: 'translate3d(0, 0, 0)'},
+      leave: {opacity: 0, transform: 'translate3d(0, 20%, 0)'}
+    };
+  }
+
+  // horizontal transition
+  const percent = date1 < date2 ? 100 : -100;
+  return {
+    from: {opacity: 1, transform: `translate3d(${percent}%, 0, 0)`},
+    enter: {opacity: 1, transform: 'translate3d(0, 0, 0)'},
+    leave: {opacity: 0, transform: `translate3d(${-percent}%, 0, 0)`}
+  };
+}
+
+export function useSlide (bookable, week) {
+  const weekStart = shortISO(week.start);
+  const weekRef = useRef(weekStart);
+
+  useEffect(() => {
+    weekRef.current = weekStart;
+  }, [weekStart]);
+
+  return useTransition(
+    {bookable, week},
+    item => `${item.bookable.id}_${shortISO(item.week.start)}`,
+    getSlideStyles(weekRef.current, weekStart)
+  );
 }

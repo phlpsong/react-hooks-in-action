@@ -3,7 +3,7 @@ import getData from '../../utils/api';
 import Spinner from '../ui/Spinner';
 import ButtonPending from './ButtonPending';
 
-export default function UsersList({user, setUser}) {
+export default function UsersList({user, setUser, isPending}) {
 
   const {data: users = [], status} = useQuery(
     'users', 
@@ -16,7 +16,7 @@ export default function UsersList({user, setUser}) {
   return (
     <div>
       <ul className="users items-list-nav">
-        {users.map((u, i) => (
+        {users.map((u) => (
           <li
             key={u.id}
             className={u.id === user?.id ? 'selected' : undefined}
@@ -25,7 +25,7 @@ export default function UsersList({user, setUser}) {
               className="btn"
               onClick={() => setUser(u)}
             >
-              {u.name}
+              {isPending && <Spinner/>} {u.name} {isPending && <Spinner/>}
             </ButtonPending>
           </li>
         ))}

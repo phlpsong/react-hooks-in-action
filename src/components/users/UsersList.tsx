@@ -5,7 +5,7 @@ import ButtonPending from './ButtonPending';
 
 export default function UsersList({user, setUser, isPending}) {
 
-  const {data: users = [], status} = useQuery(
+  const {data: users = []} = useQuery(
     'users', 
     () => getData('http://localhost:3001/users'),
     {

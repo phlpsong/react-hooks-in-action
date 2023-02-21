@@ -1,12 +1,17 @@
 import { shortISO } from './date-wrangler';
 
-export default function getData (url: string) {
+export default function getData (url, delay = 0) {
   return fetch(url)
     .then(resp => {
       if (!resp.ok) {
-        throw Error('There was a problem fetch data.');
+        throw Error('There was a problem fetching data.');
       }
-      return resp.json();
+
+      return resp.json().then(json => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve(json), delay);
+        });
+      });
     });
 }
 

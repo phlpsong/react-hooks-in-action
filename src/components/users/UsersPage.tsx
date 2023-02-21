@@ -35,6 +35,8 @@ export default function UsersPage () {
     ));
   }
 
+  console.log(`isPending: ${isPending}`);
+
   return user ? (
     <main className="users-page">
       <Fragment>

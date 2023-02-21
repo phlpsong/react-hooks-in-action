@@ -6,17 +6,11 @@ export default function UsersList({user, setUser}) {
 
   const {data: users = [], status} = useQuery(
     'users', 
-    () => getData('http://localhost:3001/users')
+    () => getData('http://localhost:3001/users'),
+    {
+      suspense: true
+    }
   );
-
-
-  if (status === 'error') {
-    return <p>{error.message}</p>;
-  }
-
-  if (status === 'loading') {
-    return <p><Spinner /> Loading users... </p>;
-  }
 
   return (
     <div>

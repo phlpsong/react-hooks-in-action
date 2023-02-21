@@ -9,7 +9,10 @@ import { useBookingsParams } from './bookingsHook';
 export default function BookingsPage () {
   const {data: bookables = [], status, error} = useQuery(
     'bookables',
-    () => getData('http://localhost:3001/bookables')
+    () => getData('http://localhost:3001/bookables'),
+    {
+      suspense: true
+    }
   );
 
   const {date, bookableId} = useBookingsParams();
@@ -21,14 +24,6 @@ export default function BookingsPage () {
   function getUrl (id) {
     const root = `/bookings?bookableId=${id}`;
     return date ? `${root}&date=${shortISO(date)}` : root;
-  }
-
-  if (status === 'error') {
-    return <p>{error.message}</p>;
-  }
-
-  if (status === 'loading') {
-    return <PageSpinner />;
   }
 
   return (

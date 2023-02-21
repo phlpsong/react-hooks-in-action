@@ -1,4 +1,4 @@
-import { Fragment, Suspense, useState } from 'react';
+import { Fragment, Suspense, useState, useTransition } from 'react';
 import { useQueryClient } from 'react-query';
 import getData from '../../utils/api';
 import PageSpinner from '../ui/PageSpinner';
@@ -16,8 +16,11 @@ export default function UsersPage () {
   // select the logged in user
   const user = selectedUser || loggedInUser;
 
+  const [isPending, startTransition] = useTransition();
+
   function switchUser(nextUser) {
-    setSelectedUser(nextUser);
+    startTransition(() => setSelectedUser(nextUser));
+    // setSelectedUser(nextUser);
     queryClient.prefetchQuery(
       ['user', nextUser.id],
       () => getData(`http://localhost:3001/users/${nextUser.id}`)
@@ -34,9 +37,9 @@ export default function UsersPage () {
   return user ? (
     <main className="users-page">
       <Fragment>
-        <UsersList user={user} setUser={setSelectedUser} />
+        <UsersList user={user} setUser={switchUser} />
         <Suspense fallback={<PageSpinner />}>
-          <UserDetail userID={user.id} />
+          <UserDetail userID={user.id} isPending={isPending} />
         </Suspense>
       </Fragment>
     </main>

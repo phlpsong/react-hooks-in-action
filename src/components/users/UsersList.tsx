@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import getData from '../../utils/api';
 import Spinner from '../ui/Spinner';
+import ButtonPending from './ButtonPending';
 
 export default function UsersList({user, setUser}) {
 
@@ -20,15 +21,12 @@ export default function UsersList({user, setUser}) {
             key={u.id}
             className={u.id === user?.id ? 'selected' : undefined}
           >
-            <button
+            <ButtonPending
               className="btn"
-              onClick={() => {
-                console.log(`user: ${JSON.stringify(u)}`);
-                setUser(u);
-              }}
+              onClick={() => setUser(u)}
             >
               {u.name}
-            </button>
+            </ButtonPending>
           </li>
         ))}
       </ul>
